@@ -1,4 +1,4 @@
-package com.elevatorprogrammer;
+package com.wtech.elevatorprogrammer;
 
 import com.facebook.react.ReactActivity;
 import android.os.Bundle;
