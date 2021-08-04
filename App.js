@@ -7,13 +7,20 @@
  */
 import React from 'react';
 import theme from './App/styles';
+import {store} from './App/redux/store';
 import {NativeBaseProvider} from 'native-base';
-import {Root} from './App/components/RootComponent';
+import {Navigator} from './App/navigation/Navigators';
+import {NavigationContainer} from '@react-navigation/native';
+import {Provider} from 'react-redux';
 
 function App() {
   return (
     <NativeBaseProvider theme={theme}>
-      <Root />
+      <Provider store={store}>
+        <NavigationContainer>
+          <Navigator />
+        </NavigationContainer>
+      </Provider>
     </NativeBaseProvider>
   );
 }

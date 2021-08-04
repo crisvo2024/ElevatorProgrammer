@@ -1,7 +1,7 @@
 import React from 'react';
-import {CheckIcon, Stack, Select, Heading, Button} from 'native-base';
+import {Button, CheckIcon, Heading, Select, Stack} from 'native-base';
 
-export const Root = () => {
+export const ConnectionScreen = () => {
   let [language, setLanguage] = React.useState('');
   let devices = [
     {name: 'Santiago1', Mac: 'E9-04-67-9F-92-50'},
