@@ -1,13 +1,11 @@
 import React from 'react';
 import {Button, CheckIcon, Heading, Select, Stack} from 'native-base';
+import {useDispatch, useSelector} from 'react-redux';
+import {selectDevice} from '../redux/features/connection/connectionReducer';
 
 export const ConnectionScreen = () => {
-  let [language, setLanguage] = React.useState('');
-  let devices = [
-    {name: 'Santiago1', Mac: 'E9-04-67-9F-92-50'},
-    {name: 'Santiago2', Mac: 'E9-04-67-9F-92-51'},
-    {name: 'Santiago3', Mac: 'E9-04-67-9F-92-52'},
-  ];
+  const dispatch = useDispatch();
+  const {devices, current} = useSelector(state => state.connection);
   return (
     <Stack
       justifyContent={'center'}
@@ -18,12 +16,12 @@ export const ConnectionScreen = () => {
       <Heading textAlign={'center'}>Conexión</Heading>
       <Button size={'lg'}>Buscar dispositivos</Button>
       <Select
-        selectedValue={language}
+        selectedValue={current}
         minWidth={300}
         width={'90%'}
         accessibilityLabel="Selecciona el dispositivo"
         placeholder="Selecciona el dispositivo"
-        onValueChange={itemValue => setLanguage(itemValue)}
+        onValueChange={itemValue => dispatch(selectDevice(itemValue))}
         _selectedItem={{
           bg: 'cyan.600',
           endIcon: <CheckIcon size={4} />,
