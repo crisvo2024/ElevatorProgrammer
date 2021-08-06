@@ -29,13 +29,12 @@ export const ConnectionScreen = () => {
           endIcon: <CheckIcon size={4} />,
         }}>
         {devices.map(device => (
-          <Select.Item label={device.name} value={device.Mac} />
+          <Select.Item
+            label={device.name}
+            value={device.Mac}
+            key={device.Mac}
+          />
         ))}
-        {/*<Select.Item label="JavaScript" value="js" />*/}
-        {/*<Select.Item label="TypeScript" value="ts" />*/}
-        {/*<Select.Item label="C" value="c" />*/}
-        {/*<Select.Item label="Python" value="py" />*/}
-        {/*<Select.Item label="Java" value="java" />*/}
       </Select>
       <Button>Conectar</Button>
     </Stack>

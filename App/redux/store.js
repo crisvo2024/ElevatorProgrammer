@@ -1,4 +1,8 @@
-import {createStore} from 'redux';
-import reducers from './reducer';
+import {configureStore} from '@reduxjs/toolkit';
+import connectionReducer from './features/connection/connectionReducer';
 
-export const store = createStore(reducers);
+export const store = configureStore({
+  reducer: {
+    connection: connectionReducer,
+  },
+});
