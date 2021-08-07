@@ -1,11 +1,17 @@
 import React from 'react';
-import {Button, CheckIcon, Heading, Select, Stack} from 'native-base';
+import {Button, CheckIcon, Heading, Select, Stack, Text} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectDevice} from '../redux/features/connection/connectionReducer';
+import {
+  scanDevices,
+  selectDevice,
+  selectDevices,
+  stopScan,
+} from '../redux/features/connection/connectionReducer';
 
 export const ConnectionScreen = () => {
   const dispatch = useDispatch();
-  const {devices, current} = useSelector(state => state.connection);
+  const devices = useSelector(selectDevices);
+  const current = useSelector(state => state.connection.current);
   return (
     <Stack
       justifyContent={'center'}
@@ -14,7 +20,9 @@ export const ConnectionScreen = () => {
       space={'sm'}
       alignItems={'center'}>
       <Heading textAlign={'center'}>Conexión</Heading>
-      <Button size={'lg'}>Buscar dispositivos</Button>
+      <Button size={'lg'} onPress={() => dispatch(scanDevices())}>
+        Buscar dispositivos
+      </Button>
       <Select
         selectedValue={current}
         minWidth={300}
@@ -26,15 +34,13 @@ export const ConnectionScreen = () => {
           bg: 'cyan.600',
           endIcon: <CheckIcon size={4} />,
         }}>
+        <Select.Item label={'label'} value={'holi'} />
         {devices.map(device => (
-          <Select.Item
-            label={device.name}
-            value={device.Mac}
-            key={device.Mac}
-          />
+          <Select.Item label={device.name} value={device.id} key={device.id} />
         ))}
       </Select>
-      <Button>Conectar</Button>
+      <Button onPress={() => dispatch(stopScan())}>Conectar</Button>
+      <Text>{'kjn' + current}</Text>
     </Stack>
   );
 };

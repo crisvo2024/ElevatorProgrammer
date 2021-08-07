@@ -1,11 +1,17 @@
 import {BleManager} from 'react-native-ble-plx';
-const bleManager = new BleManager();
-function scanAndConnect() {}
-export const initialize = () => {
-  const subscription = bleManager.onStateChange(state => {
-    if (state === 'PoweredOn') {
-      scanAndConnect();
-      subscription.remove();
-    }
-  }, true);
-};
+class BluetoothService {
+  constructor() {
+    this.manager = new BleManager();
+  }
+  subscribeToState(listener) {
+    this.subscription = this.manager.onStateChange(listener, true);
+  }
+  scan(listener) {
+    this.manager.startDeviceScan(null, null, listener);
+  }
+  stopScan() {
+    console.log('stop');
+    this.manager.stopDeviceScan();
+  }
+}
+export default new BluetoothService();
