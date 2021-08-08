@@ -11,7 +11,12 @@ const initialState = devicesAdapter.getInitialState({
   status: 'empty',
   current: null,
 });
-
+export const connectToDevice = createAsyncThunk(
+  'connection/connect',
+  async id => {
+    return await bluetoothService.connect(id);
+  },
+);
 const connectionSlice = createSlice({
   name: 'connection',
   initialState,
@@ -20,13 +25,21 @@ const connectionSlice = createSlice({
     selectDevice(state, action) {
       state.current = action.payload;
     },
-    devicesLoading(state, action) {
+    devicesLoading(state, _) {
       state.status = 'loading';
     },
     error(state, action) {},
-    stopScan(state, action) {
-      bluetoothService.stopScan();
-    },
+  },
+  extraReducers: builder => {
+    builder.addCase(connectToDevice.fulfilled, (state, _) => {
+      state.status = 'connected';
+    });
+    builder.addCase(connectToDevice.pending, (state, _) => {
+      state.status = 'connecting';
+    });
+    builder.addCase(connectToDevice.rejected, (state, _) => {
+      state.status = 'error';
+    });
   },
 });
 
@@ -34,6 +47,7 @@ export const scanDevices = createAsyncThunk(
   'connection/scan',
   async (_, thunkAPI) => {
     const dispatch = thunkAPI.dispatch;
+    dispatch(connectionSlice.actions.devicesLoading);
     bluetoothService.scan((error, scannedDevice) => {
       if (error !== null) {
         dispatch(connectionSlice.actions.error);
@@ -42,16 +56,15 @@ export const scanDevices = createAsyncThunk(
           id: scannedDevice.id,
           name: scannedDevice.name,
         };
-        if (entity.name !== null) {
-          dispatch(connectionSlice.actions.upsertDevice(entity));
-        }
+        dispatch(connectionSlice.actions.upsertDevice(entity));
+
         delete scannedDevice._manager;
         console.log(scannedDevice);
       }
     });
   },
 );
-export const {selectDevice, devicesLoading, stopScan} = connectionSlice.actions;
+export const {selectDevice} = connectionSlice.actions;
 export const {selectAll: selectDevices} = devicesAdapter.getSelectors(
   state => state.connection,
 );

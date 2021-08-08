@@ -1,17 +1,35 @@
 import React from 'react';
-import {Button, CheckIcon, Heading, Select, Stack, Text} from 'native-base';
+import {
+  Button,
+  CheckIcon,
+  Heading,
+  Select,
+  Spinner,
+  Stack,
+  Text,
+} from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  connectToDevice,
   scanDevices,
   selectDevice,
   selectDevices,
-  stopScan,
 } from '../redux/features/connection/connectionReducer';
 
-export const ConnectionScreen = () => {
+export const ConnectionScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const devices = useSelector(selectDevices);
-  const current = useSelector(state => state.connection.current);
+  const {current, status} = useSelector(state => state.connection);
+  if (status === 'connecting') {
+    return (
+      <center>
+        <Spinner />
+      </center>
+    );
+  }
+  if (status === 'connected') {
+    navigation.push('Connected');
+  }
   return (
     <Stack
       justifyContent={'center'}
@@ -34,12 +52,17 @@ export const ConnectionScreen = () => {
           bg: 'cyan.600',
           endIcon: <CheckIcon size={4} />,
         }}>
-        <Select.Item label={'label'} value={'holi'} />
         {devices.map(device => (
-          <Select.Item label={device.name} value={device.id} key={device.id} />
+          <Select.Item
+            label={device.name ? device.name : device.id}
+            value={device.id}
+            key={device.id}
+          />
         ))}
       </Select>
-      <Button onPress={() => dispatch(stopScan())}>Conectar</Button>
+      <Button onPress={() => dispatch(connectToDevice(current))}>
+        Conectar
+      </Button>
       <Text>{'kjn' + current}</Text>
     </Stack>
   );
