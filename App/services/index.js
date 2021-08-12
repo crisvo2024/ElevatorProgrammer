@@ -1,1 +1,1 @@
-export 
+export BluetoothService from 'bluetooth/bluetoothService';

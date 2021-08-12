@@ -11,11 +11,12 @@ class BluetoothService {
     this.manager.startDeviceScan(null, null, listener);
   }
   connect(id) {
-    console.log('stop');
     this.manager.stopDeviceScan();
     return this.manager.connectToDevice(id).then(device => {
       this.device = device;
-      return device.discoverAllServicesAndCharacteristics();
+      return device
+        .discoverAllServicesAndCharacteristics()
+        .then(() => Promise.resolve());
     });
   }
   readCharacteristic(serviceUUID, characteristicUUID) {

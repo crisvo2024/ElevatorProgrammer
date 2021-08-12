@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   createAsyncThunk,
 } from '@reduxjs/toolkit';
-import bluetoothService from '../../../services/bluetooth/bluetoothService';
+import bluetoothService from '../../services/bluetooth/bluetoothService';
 
 const devicesAdapter = createEntityAdapter();
 
@@ -57,9 +57,9 @@ export const scanDevices = createAsyncThunk(
           name: scannedDevice.name,
         };
         dispatch(connectionSlice.actions.upsertDevice(entity));
-
-        delete scannedDevice._manager;
-        console.log(scannedDevice);
+        //
+        // delete scannedDevice._manager;
+        // console.log(scannedDevice);
       }
     });
   },

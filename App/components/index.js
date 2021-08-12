@@ -1,1 +1,1 @@
-export * from '.';
+export {LevelSelector} from './levelSelector';

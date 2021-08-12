@@ -1,12 +1,12 @@
 import React from 'react';
 import {
   Button,
+  Center,
   CheckIcon,
   Heading,
   Select,
   Spinner,
   Stack,
-  Text,
 } from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -14,21 +14,18 @@ import {
   scanDevices,
   selectDevice,
   selectDevices,
-} from '../redux/features/connection/connectionReducer';
+} from '../redux/features/connectionReducer';
 
-export const ConnectionScreen = ({navigation}) => {
+export const ConnectionScreen = () => {
   const dispatch = useDispatch();
   const devices = useSelector(selectDevices);
   const {current, status} = useSelector(state => state.connection);
   if (status === 'connecting') {
     return (
-      <center>
+      <Center h={'100%'}>
         <Spinner />
-      </center>
+      </Center>
     );
-  }
-  if (status === 'connected') {
-    navigation.push('Connected');
   }
   return (
     <Stack
@@ -63,7 +60,6 @@ export const ConnectionScreen = ({navigation}) => {
       <Button onPress={() => dispatch(connectToDevice(current))}>
         Conectar
       </Button>
-      <Text>{'kjn' + current}</Text>
     </Stack>
   );
 };
