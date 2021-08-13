@@ -66,9 +66,6 @@ export const scanDevices = createAsyncThunk(
           name: scannedDevice.name,
         };
         dispatch(connectionSlice.actions.upsertDevice(entity));
-        //
-        // delete scannedDevice._manager;
-        // console.log(scannedDevice);
       }
     });
   },

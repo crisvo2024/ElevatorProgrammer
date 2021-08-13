@@ -59,41 +59,6 @@ class LevelsService {
   ENCODING_OPTIONS = ['7Seg', 'DC', 'Gray'];
   constructor() {
     this.temporal = [];
-    this.level_values = [
-      {level: 0, value: 43},
-      {level: 1, value: 42},
-      {level: 2, value: 41},
-      {level: 3, value: 0},
-      {level: 4, value: 1},
-      {level: 5, value: 2},
-      {level: 6, value: 3},
-      {level: 7, value: 4},
-      {level: 8, value: 5},
-      {level: 9, value: 6},
-      {level: 10, value: 7},
-      {level: 11, value: 8},
-      {level: 12, value: 9},
-      {level: 13, value: 10},
-      {level: 14, value: 11},
-      {level: 15, value: 12},
-      {level: 16, value: 13},
-      {level: 17, value: 14},
-      {level: 18, value: 15},
-      {level: 19, value: 16},
-      {level: 20, value: 17},
-      {level: 21, value: 18},
-      {level: 22, value: 19},
-      {level: 23, value: 20},
-      {level: 24, value: 21},
-      {level: 25, value: 22},
-      {level: 26, value: 23},
-      {level: 27, value: 24},
-      {level: 28, value: 25},
-      {level: 29, value: 26},
-      {level: 30, value: 27},
-      {level: 31, value: 28},
-      {level: 32, value: 29},
-    ];
   }
   getLevels(listener) {
     const result = bluetoothService.monitorCharacteristic(
@@ -126,7 +91,6 @@ class LevelsService {
           });
           this.temporal = [];
           result.remove();
-          console.log(this.temporal);
         }
       },
     );
