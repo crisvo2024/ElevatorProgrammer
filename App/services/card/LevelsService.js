@@ -1,4 +1,5 @@
 import buffer from 'buffer';
+import bluetoothService from '../bluetooth/bluetoothService';
 class LevelsService {
   LEVEL_OPTIONS = [
     {id: 0, value: '0'},
@@ -57,6 +58,7 @@ class LevelsService {
   ];
   ENCODING_OPTIONS = ['7Seg', 'DC', 'Gray'];
   constructor() {
+    this.temporal = [];
     this.level_values = [
       {level: 0, value: 43},
       {level: 1, value: 42},
@@ -93,25 +95,51 @@ class LevelsService {
       {level: 32, value: 29},
     ];
   }
-  setValueForLevel(level, value) {
-    this.level_values[level].value = value;
-  }
-  decode(levels) {
-    return levels.map(i => this.LEVEL_OPTIONS[i]);
+  getLevels(listener) {
+    const result = bluetoothService.monitorCharacteristic(
+      (error, characteristic) => {
+        if (characteristic === null) {
+          return;
+        }
+        const decodedData = new Uint8Array(
+          buffer.Buffer.from(characteristic.value, 'base64'),
+        );
+        let old = this.temporal;
+        this.temporal = new Uint8Array(old.length + decodedData.length);
+        this.temporal.set(old);
+        this.temporal.set(decodedData, old.length);
+        let end = this.temporal.slice(
+          this.temporal.length - 4,
+          this.temporal.length,
+        );
+        let realEnd = new Uint8Array([204, 51, 195, 60]);
+        if (end.every((value, index) => value === realEnd[index])) {
+          this.temporal = this.temporal.slice(2, this.temporal.length - 4);
+          listener(
+            Array.prototype.slice.call(this.temporal).map((value, index) => {
+              return {level: index, value: value};
+            }),
+          );
+          this.temporal = [];
+          result.remove();
+        }
+      },
+    );
   }
 
-  encode(levels) {
-    return levels.map(i => this.LEVEL_OPTIONS.indexOf(i));
-  }
-
-  send(levels) {
+  async send(levels) {
     let start = [0xaa];
     let command = [0x01];
-    let data = this.encode(levels);
     let end = [0xcc, 0x33, 0xc3, 0x3c];
-    let arrayBuffer = start.concat(command, data, end);
+    let arrayBuffer = start.concat(
+      command,
+      levels.map(level => level.value),
+      end,
+    );
     let bytes = buffer.Buffer.from(arrayBuffer);
-    console.log(bytes);
+    return bluetoothService
+      .writeCharacteristic(bytes.toString('base64'))
+      .then(() => Promise.resolve());
   }
 }
 export default new LevelsService();

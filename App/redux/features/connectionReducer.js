@@ -17,6 +17,12 @@ export const connectToDevice = createAsyncThunk(
     return await bluetoothService.connect(id);
   },
 );
+export const disconnect = createAsyncThunk(
+  'connection/disconnect',
+  async () => {
+    return await bluetoothService.disconnect();
+  },
+);
 const connectionSlice = createSlice({
   name: 'connection',
   initialState,
@@ -39,6 +45,9 @@ const connectionSlice = createSlice({
     });
     builder.addCase(connectToDevice.rejected, (state, _) => {
       state.status = 'error';
+    });
+    builder.addCase(disconnect.fulfilled, (state, _) => {
+      state.status = 'empty';
     });
   },
 });

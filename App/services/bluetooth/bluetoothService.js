@@ -2,13 +2,15 @@ import {BleManager} from 'react-native-ble-plx';
 class BluetoothService {
   constructor() {
     this.manager = new BleManager();
+    this.serviceUUID = '0000ffe0-0000-1000-8000-00805F9B34FB';
+    this.characteristicUUID = '0000FFE1-0000-1000-8000-00805F9B34FB';
     this.device = null;
   }
   subscribeToState(listener) {
     this.subscription = this.manager.onStateChange(listener, true);
   }
   scan(listener) {
-    this.manager.startDeviceScan(null, null, listener);
+    this.manager.startDeviceScan([this.serviceUUID], null, listener);
   }
   connect(id) {
     this.manager.stopDeviceScan();
@@ -19,23 +21,27 @@ class BluetoothService {
         .then(() => Promise.resolve());
     });
   }
-  readCharacteristic(serviceUUID, characteristicUUID) {
+  disconnect() {
+    return this.device.cancelConnection().then(() => Promise.resolve());
+  }
+  readCharacteristic() {
     return this.device.readCharacteristicForService(
-      serviceUUID,
-      characteristicUUID,
+      this.serviceUUID,
+      this.characteristicUUID,
     );
   }
-  writeCharacteristic(serviceUUID, characteristicUUID, data) {
+  writeCharacteristic(data) {
     return this.device.writeCharacteristicWithResponseForService(
-      serviceUUID,
-      characteristicUUID,
+      this.serviceUUID,
+      this.characteristicUUID,
       data,
     );
   }
-  monitorCharacteristic(serviceUUID, characteristicUUID) {
-    return this.device.monitorCharacteristicForDevice(
-      serviceUUID,
-      characteristicUUID,
+  monitorCharacteristic(listener) {
+    return this.device.monitorCharacteristicForService(
+      this.serviceUUID,
+      this.characteristicUUID,
+      listener,
     );
   }
 }
