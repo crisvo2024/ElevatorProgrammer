@@ -9,7 +9,7 @@ const levelsAdapter = createEntityAdapter({
 });
 const initialState = levelsAdapter.getInitialState({
   status: 'loading',
-  encoding: '7Seg',
+  encoding: 0,
   encodingOptions: levelsService.ENCODING_OPTIONS,
   levelOptions: levelsService.LEVEL_OPTIONS,
 });
@@ -19,7 +19,8 @@ export const sendLevels = createAsyncThunk(
     const entities = levelsAdapter
       .getSelectors(state => state.levels)
       .selectAll(thunkAPI.getState());
-    return levelsService.send(entities);
+    const encoding = thunkAPI.getState().levels.encoding;
+    return levelsService.send(entities, encoding);
   },
 );
 const levelsSlice = createSlice({
@@ -29,8 +30,12 @@ const levelsSlice = createSlice({
     selectEncoding(state, action) {
       state.encoding = action.payload;
     },
+    toInitial(state, _) {
+      state.status = 'loading';
+    },
     setLevels(state, action) {
-      levelsAdapter.setAll(state, action.payload);
+      levelsAdapter.setAll(state, action.payload.levels);
+      state.encoding = action.payload.encoding;
       state.status = 'loaded';
     },
     selectValueForLevel: {
@@ -57,12 +62,13 @@ const levelsSlice = createSlice({
 export const getCurrentLevels = createAsyncThunk(
   'levels/getCurrentLevel',
   (args, thunkApi) => {
-    levelsService.getLevels(array => {
-      thunkApi.dispatch(levelsSlice.actions.setLevels(array));
+    levelsService.getLevels(result => {
+      thunkApi.dispatch(levelsSlice.actions.setLevels(result));
     });
   },
 );
 export const {selectIds: selectLevelsIds, selectById: selectLevelById} =
   levelsAdapter.getSelectors(state => state.levels);
-export const {selectEncoding, selectValueForLevel} = levelsSlice.actions;
+export const {selectEncoding, selectValueForLevel, toInitial} =
+  levelsSlice.actions;
 export default levelsSlice.reducer;

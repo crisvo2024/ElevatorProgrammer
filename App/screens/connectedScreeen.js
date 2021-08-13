@@ -15,6 +15,7 @@ import {
   getCurrentLevels,
   selectLevelsIds,
   sendLevels,
+  toInitial,
 } from '../redux/features/levelsReducer';
 import {LevelSelector} from '../components';
 import {EncodingSelector} from '../components/encodingSelector';
@@ -25,7 +26,12 @@ export const ConnectedScreen = ({navigation}) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button onPress={() => dispatch(disconnect())} size={'xs'}>
+        <Button
+          onPress={() => {
+            dispatch(disconnect());
+            dispatch(toInitial());
+          }}
+          size={'xs'}>
           Desconectar
         </Button>
       ),

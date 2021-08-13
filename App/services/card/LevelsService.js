@@ -114,23 +114,28 @@ class LevelsService {
         );
         let realEnd = new Uint8Array([204, 51, 195, 60]);
         if (end.every((value, index) => value === realEnd[index])) {
-          this.temporal = this.temporal.slice(2, this.temporal.length - 4);
-          listener(
-            Array.prototype.slice.call(this.temporal).map((value, index) => {
-              return {level: index, value: value};
-            }),
-          );
+          let encoding = this.temporal[this.temporal.length - 5];
+          this.temporal = this.temporal.slice(2, this.temporal.length - 5);
+          listener({
+            levels: Array.prototype.slice
+              .call(this.temporal)
+              .map((value, index) => {
+                return {level: index, value: value};
+              }),
+            encoding,
+          });
           this.temporal = [];
           result.remove();
+          console.log(this.temporal);
         }
       },
     );
   }
 
-  async send(levels) {
+  async send(levels, encoding) {
     let start = [0xaa];
     let command = [0x01];
-    let end = [0xcc, 0x33, 0xc3, 0x3c];
+    let end = [encoding, 0xcc, 0x33, 0xc3, 0x3c];
     let arrayBuffer = start.concat(
       command,
       levels.map(level => level.value),

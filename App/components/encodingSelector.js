@@ -9,14 +9,14 @@ export const EncodingSelector = () => {
   const encodingOptions = useSelector(state => state.levels.encodingOptions);
   return (
     <Flex wrap={'wrap'} direction={'row'} justifyContent={'space-around'}>
-      {encodingOptions.map(option => (
+      {encodingOptions.map((value, index) => (
         <Button
-          onPress={() => dispatch(selectEncoding(option))}
-          key={option}
+          onPress={() => dispatch(selectEncoding(index))}
+          key={index}
           width={'30%'}
           my={2}
-          variant={encoding === option ? 'solid' : 'outline'}>
-          {option}
+          variant={encoding === index ? 'solid' : 'outline'}>
+          {value}
         </Button>
       ))}
     </Flex>
