@@ -7,19 +7,27 @@ class BluetoothService {
     this.device = null;
   }
   subscribeToState(listener) {
-    this.subscription = this.manager.onStateChange(listener, true);
+    return this.manager.onStateChange(listener, true);
   }
   scan(listener) {
     this.manager.startDeviceScan([this.serviceUUID], null, listener);
   }
+  enable() {
+    return this.manager.enable();
+  }
   connect(id) {
     this.manager.stopDeviceScan();
-    return this.manager.connectToDevice(id).then(device => {
-      this.device = device;
-      return device
-        .discoverAllServicesAndCharacteristics()
-        .then(() => Promise.resolve());
-    });
+    return this.manager.connectToDevice(id).then(
+      device => {
+        this.device = device;
+        return device
+          .discoverAllServicesAndCharacteristics()
+          .then(() => Promise.resolve());
+      },
+      error => {
+        return Promise.reject(error);
+      },
+    );
   }
   disconnect() {
     return this.device.cancelConnection().then(() => Promise.resolve());

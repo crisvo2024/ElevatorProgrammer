@@ -7,9 +7,12 @@ import {
   Select,
   Spinner,
   Stack,
+  Text,
+  WarningIcon,
 } from 'native-base';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  afterError,
   connectToDevice,
   scanDevices,
   selectDevice,
@@ -19,11 +22,22 @@ import {
 export const ConnectionScreen = () => {
   const dispatch = useDispatch();
   const devices = useSelector(selectDevices);
-  const {current, status} = useSelector(state => state.connection);
+  const {current, status, error} = useSelector(state => state.connection);
   if (status === 'connecting') {
     return (
       <Center h={'100%'}>
         <Spinner />
+      </Center>
+    );
+  }
+  if (status === 'error') {
+    setTimeout(() => dispatch(afterError()), 2000);
+    return (
+      <Center h={'100%'}>
+        <Stack alignItems={'center'}>
+          <WarningIcon m={4} color="red.600" />
+          <Text>{error}</Text>
+        </Stack>
       </Center>
     );
   }

@@ -4,12 +4,14 @@ import {
   createAsyncThunk,
 } from '@reduxjs/toolkit';
 import bluetoothService from '../../services/bluetooth/bluetoothService';
+import {Platform} from 'react-native';
 
 const devicesAdapter = createEntityAdapter();
 
 const initialState = devicesAdapter.getInitialState({
   status: 'empty',
   current: null,
+  error: null,
 });
 export const connectToDevice = createAsyncThunk(
   'connection/connect',
@@ -34,7 +36,16 @@ const connectionSlice = createSlice({
     devicesLoading(state, _) {
       state.status = 'loading';
     },
-    error(state, action) {},
+    afterError(state, _) {
+      state.status = 'empty';
+      state.current = null;
+      state.error = null;
+      devicesAdapter.removeAll(state);
+    },
+    error(state, action) {
+      state.status = 'error';
+      state.error = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(connectToDevice.fulfilled, (state, _) => {
@@ -45,13 +56,34 @@ const connectionSlice = createSlice({
     });
     builder.addCase(connectToDevice.rejected, (state, _) => {
       state.status = 'error';
+      state.error = 'Error al conectar';
     });
     builder.addCase(disconnect.fulfilled, (state, _) => {
       state.status = 'empty';
     });
   },
 });
-
+export const checkStatus = createAsyncThunk(
+  'connection/check',
+  (_, thunkAPI) => {
+    const dispatch = thunkAPI.dispatch;
+    const subscription = bluetoothService.subscribeToState(state => {
+      if (state !== 'PoweredOn') {
+        if (Platform.OS === 'android') {
+          bluetoothService.enable().then(() => dispatch(scanDevices()));
+        } else {
+          dispatch(
+            connectionSlice.actions.error(
+              'Active el bluetooth para usar esta aplicación',
+            ),
+          );
+        }
+      } else {
+        subscription.remove();
+      }
+    });
+  },
+);
 export const scanDevices = createAsyncThunk(
   'connection/scan',
   async (_, thunkAPI) => {
@@ -59,7 +91,7 @@ export const scanDevices = createAsyncThunk(
     dispatch(connectionSlice.actions.devicesLoading);
     bluetoothService.scan((error, scannedDevice) => {
       if (error !== null) {
-        dispatch(connectionSlice.actions.error);
+        dispatch(checkStatus());
       } else {
         let entity = {
           id: scannedDevice.id,
@@ -70,7 +102,7 @@ export const scanDevices = createAsyncThunk(
     });
   },
 );
-export const {selectDevice} = connectionSlice.actions;
+export const {selectDevice, afterError} = connectionSlice.actions;
 export const {selectAll: selectDevices} = devicesAdapter.getSelectors(
   state => state.connection,
 );

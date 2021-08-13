@@ -49,7 +49,7 @@ export const ConnectedScreen = ({navigation}) => {
     );
   }
   if (status === 'sent') {
-    setTimeout(() => dispatch(getCurrentLevels()), 1000);
+    setTimeout(() => dispatch(toInitial()), 1000);
     return (
       <Center flex={1}>
         <Stack alignItems={'center'}>
