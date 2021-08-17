@@ -1,15 +1,18 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  Actionsheet,
   Box,
   Button,
   Center,
   CheckIcon,
   Heading,
   ScrollView,
+  SimpleGrid,
   Spinner,
   Stack,
   Text,
+  useDisclose,
 } from 'native-base';
 import {
   getCurrentLevels,
@@ -17,9 +20,10 @@ import {
   sendLevels,
   toInitial,
 } from '../redux/features/levelsReducer';
-import {LevelSelector} from '../components';
+import {LevelItem} from '../components';
 import {EncodingSelector} from '../components/encodingSelector';
 import {disconnect} from '../redux/features/connectionReducer';
+import {LevelSelector} from '../components/LevelSelector';
 
 export const ConnectedScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -68,7 +72,7 @@ export const ConnectedScreen = ({navigation}) => {
         <ScrollView>
           <Box mx={2}>
             {levels.map(item => (
-              <LevelSelector key={item} levelOptions={levelOptions} id={item} />
+              <LevelItem key={item} levelOptions={levelOptions} id={item} />
             ))}
           </Box>
         </ScrollView>
@@ -76,6 +80,7 @@ export const ConnectedScreen = ({navigation}) => {
       <Button m={4} onPress={() => dispatch(sendLevels())}>
         Guardar
       </Button>
+      <LevelSelector levelOptions={levelOptions} />
     </Box>
   );
 };
