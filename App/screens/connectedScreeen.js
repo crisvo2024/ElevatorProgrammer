@@ -62,7 +62,7 @@ export const ConnectedScreen = ({navigation}) => {
   return (
     <Box flex={1}>
       <Box flex={1} m={2}>
-        <Heading size={'md'}>Encodificación</Heading>
+        <Heading size={'md'}>Decodificación</Heading>
         <EncodingSelector />
         <Heading size={'md'}>Valores</Heading>
         <ScrollView>
