@@ -32,12 +32,12 @@ class BluetoothService {
   disconnect() {
     return this.device.cancelConnection().then(() => Promise.resolve());
   }
-  readCharacteristic() {
-    return this.device.readCharacteristicForService(
-      this.serviceUUID,
-      this.characteristicUUID,
-    );
-  }
+  // readCharacteristic() {
+  //   return this.device.readCharacteristicForService(
+  //     this.serviceUUID,
+  //     this.characteristicUUID,
+  //   );
+  // }
   writeCharacteristic(data) {
     return this.device.writeCharacteristicWithResponseForService(
       this.serviceUUID,

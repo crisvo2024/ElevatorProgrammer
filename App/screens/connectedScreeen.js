@@ -1,19 +1,15 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  Actionsheet,
   Box,
   Button,
   Center,
   CheckIcon,
   FlatList,
   Heading,
-  ScrollView,
-  SimpleGrid,
   Spinner,
   Stack,
   Text,
-  useDisclose,
 } from 'native-base';
 import {
   getCurrentLevels,
@@ -45,8 +41,15 @@ export const ConnectedScreen = ({navigation}) => {
   const status = useSelector(state => state.levels.status);
   const levelOptions = useSelector(state => state.levels.levelOptions);
   const levels = useSelector(selectLevelsIds);
-  if (status === 'loading') {
+  if (status === 'initial') {
     dispatch(getCurrentLevels());
+    return (
+      <Center flex={1}>
+        <Spinner />
+      </Center>
+    );
+  }
+  if (status === 'loading') {
     return (
       <Center flex={1}>
         <Spinner />

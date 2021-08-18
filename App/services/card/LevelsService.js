@@ -81,6 +81,7 @@ class LevelsService {
         if (end.every((value, index) => value === realEnd[index])) {
           let encoding = this.temporal[this.temporal.length - 5];
           this.temporal = this.temporal.slice(2, this.temporal.length - 5);
+
           listener({
             levels: Array.prototype.slice
               .call(this.temporal)
@@ -96,7 +97,7 @@ class LevelsService {
     );
   }
 
-  async send(levels, encoding) {
+  async sendLevels(levels, encoding) {
     let start = [0xaa];
     let command = [0x01];
     let end = [encoding, 0xcc, 0x33, 0xc3, 0x3c];

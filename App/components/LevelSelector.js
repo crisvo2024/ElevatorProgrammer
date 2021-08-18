@@ -1,11 +1,4 @@
-import {
-  Actionsheet,
-  Box,
-  Button,
-  Flex,
-  ScrollView,
-  useDisclose,
-} from 'native-base';
+import {Actionsheet, Box, Flex, ScrollView} from 'native-base';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {clearLevel, selectValueForLevel} from '../redux/features/levelsReducer';
@@ -16,9 +9,8 @@ export const LevelSelector = ({levelOptions}) => {
   return (
     <Box>
       <Actionsheet
-        disableOverlay={true}
         isOpen={selectedLevel !== null}
-        onClose={() => dispatch(() => dispatch(clearLevel()))}>
+        onClose={() => dispatch(clearLevel())}>
         <Actionsheet.Content>
           <ScrollView>
             <Flex wrap={'wrap'} direction={'row'}>

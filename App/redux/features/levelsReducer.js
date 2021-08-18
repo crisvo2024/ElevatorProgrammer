@@ -8,7 +8,7 @@ const levelsAdapter = createEntityAdapter({
   selectId: entity => entity.level,
 });
 const initialState = levelsAdapter.getInitialState({
-  status: 'loading',
+  status: 'initial',
   encoding: 0,
   encodingOptions: levelsService.ENCODING_OPTIONS,
   levelOptions: levelsService.LEVEL_OPTIONS,
@@ -21,7 +21,7 @@ export const sendLevels = createAsyncThunk(
       .getSelectors(state => state.levels)
       .selectAll(thunkAPI.getState());
     const encoding = thunkAPI.getState().levels.encoding;
-    return levelsService.send(entities, encoding);
+    return levelsService.sendLevels(entities, encoding);
   },
 );
 const levelsSlice = createSlice({
@@ -38,7 +38,7 @@ const levelsSlice = createSlice({
       state.encoding = action.payload;
     },
     toInitial(state, _) {
-      state.status = 'loading';
+      state.status = 'initial';
     },
     setLevels(state, action) {
       levelsAdapter.setAll(state, action.payload.levels);
@@ -49,17 +49,6 @@ const levelsSlice = createSlice({
       state.entities[state.selectedLevel.level].value = action.payload;
       state.selectedLevel = null;
     },
-    // selectValueForLevel: {
-    //   reducer(state, action) {
-    //     const {level, value} = action.payload;
-    //     state.entities[level].value = value;
-    //   },
-    //   prepare(level, value) {
-    //     return {
-    //       payload: {level, value},
-    //     };
-    //   },
-    // },
   },
   extraReducers: builder => {
     builder.addCase(sendLevels.pending, (state, _) => {
