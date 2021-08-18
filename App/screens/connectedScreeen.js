@@ -6,6 +6,7 @@ import {
   Button,
   Center,
   CheckIcon,
+  FlatList,
   Heading,
   ScrollView,
   SimpleGrid,
@@ -69,13 +70,14 @@ export const ConnectedScreen = ({navigation}) => {
         <Heading size={'md'}>Decodificación</Heading>
         <EncodingSelector />
         <Heading size={'md'}>Valores</Heading>
-        <ScrollView>
-          <Box mx={2}>
-            {levels.map(item => (
-              <LevelItem key={item} levelOptions={levelOptions} id={item} />
-            ))}
-          </Box>
-        </ScrollView>
+        <FlatList
+          m={2}
+          data={levels}
+          keyExtractor={item => item}
+          renderItem={({item}) => (
+            <LevelItem levelOptions={levelOptions} id={item} />
+          )}
+        />
       </Box>
       <Button m={4} onPress={() => dispatch(sendLevels())}>
         Guardar

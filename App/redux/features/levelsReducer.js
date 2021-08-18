@@ -12,6 +12,7 @@ const initialState = levelsAdapter.getInitialState({
   encoding: 0,
   encodingOptions: levelsService.ENCODING_OPTIONS,
   levelOptions: levelsService.LEVEL_OPTIONS,
+  selectedLevel: null,
 });
 export const sendLevels = createAsyncThunk(
   'levels/sendLevel',
@@ -27,6 +28,12 @@ const levelsSlice = createSlice({
   name: 'levels',
   initialState,
   reducers: {
+    selectLevel(state, action) {
+      state.selectedLevel = action.payload;
+    },
+    clearLevel(state, _) {
+      state.selectedLevel = null;
+    },
     selectEncoding(state, action) {
       state.encoding = action.payload;
     },
@@ -38,17 +45,21 @@ const levelsSlice = createSlice({
       state.encoding = action.payload.encoding;
       state.status = 'loaded';
     },
-    selectValueForLevel: {
-      reducer(state, action) {
-        const {level, value} = action.payload;
-        state.entities[level].value = value;
-      },
-      prepare(level, value) {
-        return {
-          payload: {level, value},
-        };
-      },
+    selectValueForLevel(state, action) {
+      state.entities[state.selectedLevel.level].value = action.payload;
+      state.selectedLevel = null;
     },
+    // selectValueForLevel: {
+    //   reducer(state, action) {
+    //     const {level, value} = action.payload;
+    //     state.entities[level].value = value;
+    //   },
+    //   prepare(level, value) {
+    //     return {
+    //       payload: {level, value},
+    //     };
+    //   },
+    // },
   },
   extraReducers: builder => {
     builder.addCase(sendLevels.pending, (state, _) => {
@@ -69,6 +80,11 @@ export const getCurrentLevels = createAsyncThunk(
 );
 export const {selectIds: selectLevelsIds, selectById: selectLevelById} =
   levelsAdapter.getSelectors(state => state.levels);
-export const {selectEncoding, selectValueForLevel, toInitial} =
-  levelsSlice.actions;
+export const {
+  selectEncoding,
+  selectValueForLevel,
+  toInitial,
+  selectLevel,
+  clearLevel,
+} = levelsSlice.actions;
 export default levelsSlice.reducer;
