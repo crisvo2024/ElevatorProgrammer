@@ -96,20 +96,24 @@ class LevelsService {
       },
     );
   }
-
-  async sendLevels(levels, encoding) {
+  async send(command, data) {
     let start = [0xaa];
-    let command = [0x01];
-    let end = [encoding, 0xcc, 0x33, 0xc3, 0x3c];
-    let arrayBuffer = start.concat(
-      command,
-      levels.map(level => level.value),
-      end,
-    );
+    let end = [0xcc, 0x33, 0xc3, 0x3c];
+    let arrayBuffer = start.concat(command, data, end);
     let bytes = buffer.Buffer.from(arrayBuffer);
     return bluetoothService
       .writeCharacteristic(bytes.toString('base64'))
       .then(() => Promise.resolve());
+  }
+
+  async sendLevels(levels, encoding) {
+    let command = [0x01];
+    let data = levels.map(level => level.value).concat(encoding);
+    return await this.send(command, data);
+  }
+  async sendAutotest() {
+    let command = [0x02];
+    return await this.send(command, []);
   }
 }
 export default new LevelsService();

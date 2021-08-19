@@ -14,6 +14,7 @@ import {
 import {
   getCurrentLevels,
   selectLevelsIds,
+  sendAutotest,
   sendLevels,
   toInitial,
 } from '../redux/features/levelsReducer';
@@ -82,6 +83,9 @@ export const ConnectedScreen = ({navigation}) => {
           )}
         />
       </Box>
+      <Button mx={4} onPress={() => dispatch(sendAutotest())}>
+        Autotest
+      </Button>
       <Button m={4} onPress={() => dispatch(sendLevels())}>
         Guardar
       </Button>

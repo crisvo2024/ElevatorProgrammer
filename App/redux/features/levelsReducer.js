@@ -24,6 +24,9 @@ export const sendLevels = createAsyncThunk(
     return levelsService.sendLevels(entities, encoding);
   },
 );
+export const sendAutotest = createAsyncThunk('levels/sendAutotest', () => {
+  return levelsService.sendAutotest();
+});
 const levelsSlice = createSlice({
   name: 'levels',
   initialState,
