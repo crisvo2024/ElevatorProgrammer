@@ -61,6 +61,7 @@ class LevelsService {
     this.temporal = [];
   }
   getLevels(listener) {
+    this.temporal = [];
     const result = bluetoothService.monitorCharacteristic(
       (error, characteristic) => {
         if (characteristic === null) {

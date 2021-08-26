@@ -8,7 +8,7 @@ export const EncodingSelector = () => {
   const encoding = useSelector(state => state.levels.encoding);
   const encodingOptions = useSelector(state => state.levels.encodingOptions);
   return (
-    <Flex wrap={'wrap'} direction={'row'} justifyContent={'space-around'}>
+    <Flex wrap={'wrap'} direction={'row'} justifyContent={'space-between'}>
       {encodingOptions.map((value, index) => (
         <Button
           onPress={() => dispatch(selectEncoding(index))}

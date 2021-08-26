@@ -7,6 +7,7 @@ import {
   CheckIcon,
   FlatList,
   Heading,
+  HStack,
   Spinner,
   Stack,
   Text,
@@ -70,12 +71,12 @@ export const ConnectedScreen = ({navigation}) => {
   }
   return (
     <Box flex={1}>
-      <Box flex={1} m={2}>
+      <Box flex={1} my={2} mx={4}>
         <Heading size={'md'}>Decodificación</Heading>
         <EncodingSelector />
         <Heading size={'md'}>Valores</Heading>
         <FlatList
-          m={2}
+          my={2}
           data={levels}
           keyExtractor={item => item}
           renderItem={({item}) => (
@@ -83,12 +84,14 @@ export const ConnectedScreen = ({navigation}) => {
           )}
         />
       </Box>
-      <Button mx={4} onPress={() => dispatch(sendAutotest())}>
-        Autotest
-      </Button>
-      <Button m={4} onPress={() => dispatch(sendLevels())}>
-        Guardar
-      </Button>
+      <HStack>
+        <Button flex={1} mb={4} mx={4} onPress={() => dispatch(sendAutotest())}>
+          Autotest
+        </Button>
+        <Button flex={1} mb={4} mx={4} onPress={() => dispatch(sendLevels())}>
+          Guardar
+        </Button>
+      </HStack>
       <LevelSelector levelOptions={levelOptions} />
     </Box>
   );
